@@ -1,0 +1,50 @@
+FeatureScript 2878;
+import(path : "onshape/std/geometry.fs", version : "2878.0");
+
+annotation { "Feature Type Name" : "Handlebar Start" }
+export const handlebarStart = defineFeature(function(context is Context, id is Id, definition is map)
+    precondition {}
+    {
+        // 1. Evaluate the Top plane using the standard ID
+        var facePlane = evPlane(context, {
+                "face" : qCreatedBy(makeId("Top"), EntityType.FACE)
+        });
+
+        // 2. Initialize a single sketch
+        var sketch1 = newSketchOnPlane(context, id + "sketch1", {
+                "sketchPlane" : facePlane
+        });
+
+        // 3. Draw the straight line from origin to x = -140
+        skLineSegment(sketch1, "line1", {
+                "start" : vector(0, 0) * millimeter,
+                "end"   : vector(-140, 0) * millimeter
+        });
+
+        // 4. Draw the arc starting where the line ends
+        // Center at (-140, 40), radius 40. 
+        // 1. Define your parameters
+        var radius = 40 * millimeter;
+        var startPoint = vector(-140, 0) * millimeter;
+
+        // 2. Calculate coordinates relative to the center
+        // For a 90° arc starting at (-140,0) and going left/up:
+        // The center must be at (-140, radius)
+        var center = vector(-140 * millimeter, radius);
+        var endPoint = vector(-140 * millimeter - radius, radius);
+
+        // 3. Calculate the midpoint (at the 45° mark)
+        // Using sin(45°) and cos(45°) which is approx 0.7071
+        var midPoint = center + vector(-radius * 0.7071, -radius * 0.7071);
+
+        // 4. Draw the arc
+        skArc(sketch1, "arc1", {
+            "start" : startPoint,
+            "mid"   : midPoint,
+            "end"   : endPoint
+});
+
+
+        // 5. Finalize the sketch
+        skSolve(sketch1);
+    });

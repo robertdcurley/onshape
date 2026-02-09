@@ -42,9 +42,51 @@ export const handlebarStart = defineFeature(function(context is Context, id is I
             "start" : startPoint,
             "mid"   : midPoint,
             "end"   : endPoint
-});
+        });
+        // 5. Draw the straight segment to the start of the next arc
+        skLineSegment(sketch1, "line2", {
+            "start" : endPoint,
+            "end"   : endPoint + vector(0, 35) * millimeter
+        });
 
 
-        // 5. Finalize the sketch
+        // 6. Finalize the sketch
         skSolve(sketch1);
+        
+
+        // 8. Define the plane looking down the +X axis (Standard Right View)
+        // Normal (1, 0, 0) + X-axis (0, 1, 0) = Sketch Y is Global +Z (UP)
+        var posXP_plane = plane(
+        vector(-180, 0, 0) * millimeter, 
+        vector(1, 0, 0),                 // Change this from -1 to 1
+        vector(0, 1, 0)                  
+        );
+
+
+
+        // 9. Initialize the sketch on the offset plane
+        var sketch2 = newSketchOnPlane(context, id + "sketch2", {
+                "sketchPlane" : posXP_plane
+        });
+
+ 
+        var radius1 = 40 * millimeter;
+        var startPoint1 = vector(75, 0) * millimeter; // Top of the drop
+        var center1 = vector(75, -40) * millimeter;  // 40mm directly below start
+        var endPoint1 = vector(115, -40) * millimeter; // 40mm to the right of center
+
+        // FORCE 2D VECTORS: Ensure no 'Z' component is present
+        // To make the arc curve OUT (Right) and DOWN:
+        // The midpoint should be at the 45° mark between 12 o'clock and 3 o'clock
+        // Relative to center: x = +R*sin(45), y = +R*cos(45)
+        var midPoint1 = center1 + vector(radius1 * 0.7071, radius1 * 0.7071);
+
+        skArc(sketch2, "arc2", {
+            "start" : startPoint1,
+            "mid"   : midPoint1,
+            "end"   : endPoint1
+        });
+        //  Finalize the sketch
+        skSolve(sketch2);
+
     });

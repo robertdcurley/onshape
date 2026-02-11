@@ -87,6 +87,25 @@ export const handlebarStart = defineFeature(function(context is Context, id is I
             "end"   : endPoint1
         });
         //  Finalize the sketch
+        // skSolve(sketch2);
+        
+        var radius2 = 90 * millimeter;
+        var startPoint2 = vector(115, -40) * millimeter; // Top of the drop
+        var center2 = vector(25, -40) * millimeter;  // 25mm directly below start
+        var endPoint2 = vector(25, -130) * millimeter; // 25mm to the right of center
+
+        // FORCE 2D VECTORS: Ensure no 'Z' component is present
+        // To make the arc curve OUT (Right) and DOWN:
+        // The midpoint should be at the 45° mark between 12 o'clock and 3 o'clock
+        // Relative to center: x = +R*sin(45), y = +R*cos(45)
+        var midPoint2 = center2 + vector(radius2 * 0.7071, -radius2 * 0.7071);
+
+        skArc(sketch2, "arc3", {
+            "start" : startPoint2,
+            "mid"   : midPoint2,
+            "end"   : endPoint2
+        });
+        //  Finalize the sketch
         skSolve(sketch2);
 
     });

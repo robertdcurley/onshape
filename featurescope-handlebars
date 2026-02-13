@@ -105,7 +105,39 @@ export const handlebarStart = defineFeature(function(context is Context, id is I
             "mid"   : midPoint2,
             "end"   : endPoint2
         });
+        
+        //. Draw the straight line from origin to x = -140
+        skLineSegment(sketch2, "line3", {
+                "start" : vector(25, -130) * millimeter,
+                "end"   : vector(-65, -130) * millimeter
+        });
+        
+        // Define the 3D coordinate
+        var myPointLocation = vector(-180,-65,-130) * millimeter;
+
+        // Create the point
+        opPoint(context, id + "point1", {
+            "point" : myPointLocation
+        });
+
+        // Create the Plane object with an explicit Origin and Normal
+        // plane(origin, normal, xDirection)
+        var parallelToFront = plane(
+        myPointLocation,  // This sets the visual center
+        vector(0, 1, 0),  // Normal to Y (Parallel to Front)
+        vector(1, 0, 0)   // X-axis of the plane points along Global X
+        );
+
+        // Execute the operation
+        opPlane(context, id + "myPlane1", {
+        "plane" : parallelToFront,
+        "width" : 50 * millimeter,  // Optional: Forces a specific visual size
+        "height" : 50 * millimeter  // Optional: Forces a specific visual size
+});
+
+        
         //  Finalize the sketch
+        
         skSolve(sketch2);
 
     });

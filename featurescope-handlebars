@@ -133,11 +133,42 @@ export const handlebarStart = defineFeature(function(context is Context, id is I
         "plane" : parallelToFront,
         "width" : 50 * millimeter,  // Optional: Forces a specific visual size
         "height" : 50 * millimeter  // Optional: Forces a specific visual size
-});
+        });
 
         
         //  Finalize the sketch
         
         skSolve(sketch2);
+        
+        // Create a sketch on a plane (e.g., the Top Plane)
+        var theSketch = newSketchOnPlane(context, id + "mySketch", {
+        "sketchPlane" : parallelToFront
+        });
+
+        // Draw the circle using skCircle
+        // Requires a center (2D vector) and a radius
+        skCircle(theSketch, "circle1", {
+        "center" : vector(0, 0) * millimeter,
+         "radius" : 12.5 * millimeter   
+        });
+
+        // Solve the sketch to generate the geometry
+        skSolve(theSketch);
+
+        //  Identify your circle (the Profile)
+        var profileRegion = qSketchRegion(id + "mySketch");
+
+    // Identify the Path
+    // Get all edges that belong to wire bodies (sketches)
+    var allSketchEdges = qBodyType(qEverything(EntityType.EDGE), BodyType.WIRE);
+
+    var sweepPath = qSubtraction(allSketchEdges, qCreatedBy(id + "mySketch", EntityType.EDGE));
+
+    //  Execute the Sweep
+    // Since the path is continuous, opSweep will follow it across sketch boundaries.
+    opSweep(context, id + "sweep1", {
+        "profiles" : profileRegion,
+        "path" : sweepPath
+        });
 
     });

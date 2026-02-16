@@ -171,4 +171,12 @@ export const handlebarStart = defineFeature(function(context is Context, id is I
         "path" : sweepPath
         });
 
+    // Mirror parts across the 'Right' plane
+    mirror(context, id + "mirror1", {
+        "patternType" : MirrorType.PART,
+        "entities" : qEverything(EntityType.BODY), // Mirrors everything in the studio
+        "mirrorPlane" : qCreatedBy(makeId("Right"), EntityType.FACE) // Targets the default Right plane
+        });
+
+
     });
